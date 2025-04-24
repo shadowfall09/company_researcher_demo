@@ -1,51 +1,67 @@
 import matplotlib.pyplot as plt
+import pandas as pd
 import os
 
-# 确保保存图片的目录存在
-os.makedirs('asset/traffic', exist_ok=True)
+# Ensure the directory exists
+os.makedirs('assets/traffic', exist_ok=True)
 
-# 数据
-countries = ['US', 'CN', 'IN', 'KR', 'HK']
-country_shares = [19.31, 16.80, 11.76, 5.13, 4.92]
+# Sample data from the context
 
-keywords = ['langchain', 'langgraph', 'langsmith', 'langchain js', 'langraph']
-keyword_volumes = [314780, 102560, 59270, 11870, 12110]
+# Data for "主要访问国家"
+country_data = {
+    "Country": ["United States", "China", "India", "Korea", "Hong Kong"],
+    "Visit Share (%)": [19.31, 16.80, 11.76, 5.13, 4.92]
+}
 
-traffic_sources = ['Direct Visits', 'Organic Searches', 'Referrals', 'Social Networks', 'Paid Searches', 'Mail Visits', 'Ads Visits']
-traffic_shares = [40.98, 51.91, 6.16, 0.80, 0.008, 0.04, 0.10]
+# Data for "关键词"
+keyword_data = {
+    "Keyword": ["langchain", "langgraph", "langsmith", "langchain js", "langraph"],
+    "Monthly Search Volume": [314780, 102560, 59270, 11870, 12110]
+}
 
-social_media_sources = ['Reddit', 'YouTube', 'LinkedIn', 'X (Twitter)', 'Facebook']
-social_media_shares = [35.26, 30.47, 11.82, 11.68, 3.13]
+# Data for "流量来源"
+traffic_source_data = {
+    "Source": ["Direct", "Organic Search", "Referral", "Social", "Paid Search"],
+    "Share (%)": [40.98, 51.91, 6.16, 0.80, 0.01]
+}
 
-# 绘制主要访问国家的饼图
-plt.figure(figsize=(10, 7))
-plt.pie(country_shares, labels=countries, autopct='%1.1f%%', startangle=140, colors=plt.cm.Paired.colors)
-plt.title('Major Visiting Countries', fontsize=20)
-plt.savefig('asset/traffic/major_visiting_countries.png')
-plt.close()
+# Data for "社交媒体来源"
+social_media_data = {
+    "Platform": ["Reddit", "YouTube", "LinkedIn", "Twitter", "Facebook"],
+    "Traffic Share (%)": [35.26, 30.47, 11.82, 11.68, 3.13]
+}
 
-# 绘制不同比重的柱状图
-plt.figure(figsize=(10, 7))
-plt.bar(keywords, keyword_volumes, color=plt.cm.Paired.colors)
-plt.xlabel('Keywords', fontsize=20)
-plt.ylabel('Search Volume', fontsize=20)
-plt.title('Search Volume of Keywords', fontsize=20)
-plt.xticks(fontsize=20, rotation=45)
-plt.yticks(fontsize=20)
-plt.tight_layout()
-plt.savefig('asset/traffic/keyword_search_volumes.png')
-plt.close()
+# Plot function for pie chart
+def plot_pie_chart(data, labels, title, filename):
+    plt.figure(figsize=(10, 8))
+    plt.pie(data, labels=labels, autopct='%1.1f%%', startangle=140, colors=['#66c2a5', '#fc8d62', '#8da0cb', '#e78ac3', '#a6d854'])
+    plt.title(title, fontsize=20)
+    plt.axis('equal')
+    plt.savefig(f'assets/traffic/{filename}.png', bbox_inches='tight')
+    plt.close()
 
-# 绘制流量来源的饼图
-plt.figure(figsize=(10, 7))
-plt.pie(traffic_shares, labels=traffic_sources, autopct='%1.1f%%', startangle=140, colors=plt.cm.Paired.colors)
-plt.title('Traffic Sources', fontsize=20)
-plt.savefig('asset/traffic/traffic_sources.png')
-plt.close()
+# Plot function for bar chart
+def plot_bar_chart(categories, values, title, xlabel, ylabel, filename):
+    plt.figure(figsize=(12, 8))
+    plt.bar(categories, values, color=['#66c2a5', '#fc8d62', '#8da0cb', '#e78ac3', '#a6d854'])
+    plt.title(title, fontsize=20)
+    plt.xlabel(xlabel, fontsize=20)
+    plt.ylabel(ylabel, fontsize=20)
+    plt.xticks(rotation=45, ha="right", fontsize=15)
+    plt.yticks(fontsize=15)
+    plt.tight_layout()
+    plt.savefig(f'assets/traffic/{filename}.png', bbox_inches='tight')
+    plt.close()
 
-# 绘制社交媒体来源的饼图
-plt.figure(figsize=(10, 7))
-plt.pie(social_media_shares, labels=social_media_sources, autopct='%1.1f%%', startangle=140, colors=plt.cm.Paired.colors)
-plt.title('Social Media Sources', fontsize=20)
-plt.savefig('asset/traffic/social_media_sources.png')
-plt.close()
+# Create plots
+# 1. Visiting countries as a pie chart
+plot_pie_chart(country_data['Visit Share (%)'], country_data['Country'], 'Traffic by Country', 'traffic_by_country')
+
+# 2. Keywords as a bar chart
+plot_bar_chart(keyword_data['Keyword'], keyword_data['Monthly Search Volume'], 'Monthly Search Volume by Keyword', 'Keyword', 'Search Volume', 'search_volume_by_keyword')
+
+# 3. Traffic sources as a pie chart
+plot_pie_chart(traffic_source_data['Share (%)'], traffic_source_data['Source'], 'Traffic Source Share', 'traffic_source_share')
+
+# 4. Social media sources as a pie chart
+plot_pie_chart(social_media_data['Traffic Share (%)'], social_media_data['Platform'], 'Social Media Traffic Share', 'social_media_traffic_share')

@@ -1,10 +1,6 @@
 ﻿公司名,主要业务/产品,备注
-SuperAGI,开源框架，专注于多代理自主AI系统,适用于复杂AI工作流自动化
-Flowise,可视化开发环境,便于快速搭建AI代理
-Langflow,可视化开发环境,便于快速搭建AI代理
-Rivet,TypeScript库,桥接可视化编程与代码集成
-Klu.ai,统一API接口,管理多种大型语言模型
-Humanloop,协作和评估平台,促进LLM应用的性能优化
-HoneyHive AI,监控和调试工具,提升LLM应用的稳定性
-Pipe Agents,API集成工具,串联超过100个LLM
-Braintrust,开发管理平台,快速原型和实时监控支持
+Vellum AI,无需编码的聊天机器人构建,适合非技术用户，降低技术门槛
+LlamaIndex,24/7实时响应与用户参与,增强用户体验与满意度
+Flowise AI,内部流程优化与团队生产力提升,适用于高效的组织管理
+Humanloop,结合人工反馈提升模型性能,高质量的模型迭代过程
+n8n,低代码自动化与数据集成支持,适用于复杂的AI工作流
