@@ -1,0 +1,5 @@
+﻿公司名,主要业务/产品,备注
+Semantic Kernel,多语言支持和自动编排AI插件,适合需要跨语言开发的团队
+AutoChain,轻量级和可扩展的快速应用开发,结构简洁，功能不及LangChain丰富
+HuggingFace Transformers,预训练模型和活跃社区,不及LangChain在链式调用和集成方面
+Flowise AI,低代码平台,适合非技术人员快速搭建
