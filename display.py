@@ -12,6 +12,7 @@ competitor_folder = "asset/competitor"
 
 def 公司介绍():
     # st.markdown("# 公司介绍")
+    st.image("asset/screenshot.png")
     st.markdown(report[1])
     
 def Linkedin账号():
