@@ -1,37 +1,36 @@
 import pandas as pd
-import os
 
-# 示例：tavily_market基础数据结构（实际应从Tavily搜索结果中获取）
+# 假设 tavily_market 数据结构如下（示例数据，实际请替换成真实查询结果）
 tavily_market = [
     {
-        "company": "Meta (Oculus)",
-        "business": "增强现实（AR）与虚拟现实（VR）产品；推出多款智能眼镜，强调互动和元宇宙体验。",
-        "remark": "依托社交平台及技术生态，财力雄厚，拥有广泛用户基础。"
+        "公司名": "Meta（Ray-Ban Stories）",
+        "主要业务或产品": "Ray-Ban智能眼镜，集成拍照、音频通话及智能助手，强调时尚与便携。",
+        "备注": "与Ray-Ban合作，市场接受度高，功能基础但集成度高，聚焦C端用户。"
     },
     {
-        "company": "Snap Inc. (Spectacles)",
-        "business": "主打社交与娱乐功能的智能眼镜，设计时尚，面向年轻用户。",
-        "remark": "注重轻便和即时分享体验，品牌影响力强于年轻群体。"
+        "公司名": "Microsoft（HoloLens 系列）",
+        "主要业务或产品": "HoloLens 混合现实头显，面向企业级应用，强调增强现实与空间交互。",
+        "备注": "行业先行者，主要在工业、医疗和教育领域应用，设备较为笨重。"
     },
     {
-        "company": "Google (Google Glass Enterprise Edition)",
-        "business": "面向企业和专业领域的AR眼镜，强调工业、医疗等场景的工作辅助。",
-        "remark": "产品稳定性高，实用性强，在B端市场有较好口碑。"
+        "公司名": "North（Focals 已被Google收购）",
+        "主要业务或产品": "Focals 智能眼镜，利用全息显示技术，显示功能有限。",
+        "备注": "2019年被Google收购，现已停产，曾专注轻便型智能眼镜方向。"
     },
     {
-        "company": "Vuzix",
-        "business": "聚焦工业级AR眼镜，广泛应用于制造、仓储、物流等行业。",
-        "remark": "专注B端市场，客户基础成熟，技术迭代快。"
+        "公司名": "Solos（AirGo Vision）",
+        "主要业务或产品": "AirGo Vision 运动智能眼镜，专注于运动数据记录与语音交互。",
+        "备注": "设计轻巧，主要面向运动健身爱好者，功能相对单一，定位垂直市场。"
     }
 ]
 
-# 转换为DataFrame
-df = pd.DataFrame(tavily_market, columns=["company", "business", "remark"])
+# 转为DataFrame
+df = pd.DataFrame(tavily_market)
 
-# 保存路径
-output_dir = "asset/competitor"
+# 创建输出路径
+import os
+output_dir = 'asset/competitor'
 os.makedirs(output_dir, exist_ok=True)
-output_file = os.path.join(output_dir, "competitors.csv")
 
-# 保存为csv，utf-8编码，带列名
-df.to_csv(output_file, index=False, encoding="utf-8")
+# 保存为CSV
+df.to_csv(os.path.join(output_dir, 'competitors.csv'), index=False, encoding='utf-8-sig')

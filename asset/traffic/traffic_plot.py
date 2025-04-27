@@ -1,108 +1,114 @@
 import os
 import matplotlib.pyplot as plt
 
-# 示例结构化 traffic 数据（实际使用时请替换为API获取或文件读取后的真实数据）
+# 确保保存目录存在
+save_dir = 'asset/traffic'
+os.makedirs(save_dir, exist_ok=True)
+
+# 示例流量数据（请将此处替换为实际traffic数据结构）
 traffic = {
-    "mau_trend": {
-        "dates": ["2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04"],
-        "maus": [87000, 94000, 96000, 99000, 101000, 104000, 106000]
+    'mau_trend': {
+        '2023-11': 14000, '2023-12': 16000, '2024-01': 18000, '2024-02': 20000, '2024-03': 22500, '2024-04': 24946
     },
-    "keywords": [
-        {"keyword": "halliday", "volume": 17420},
-        {"keyword": "halliday glasses", "volume": 12650},
-        {"keyword": "halliday smart glasses", "volume": 2500},
-        {"keyword": "movie recommendation app", "volume": 620},
-        {"keyword": "haliday", "volume": 2610}
-    ],
-    "countries": [
-        {"country": "US", "percent": 20.71},
-        {"country": "GB", "percent": 5.83},
-        {"country": "DE", "percent": 5.83},
-        {"country": "FR", "percent": 5.40},
-        {"country": "SG", "percent": 4.61}
-    ],
-    "sources": [
-        {"source": "Direct", "percent": 31.88},
-        {"source": "Search", "percent": 43.09},
-        {"source": "Social", "percent": 11.72},
-        {"source": "Referral", "percent": 11.07},
-        {"source": "Ads", "percent": 2.00},
-        {"source": "Mail", "percent": 0.15}
-    ],
-    "social_media": [
-        {"platform": "YouTube", "percent": 82.55},
-        {"platform": "Facebook", "percent": 12.55},
-        {"platform": "X", "percent": 4.90}
-    ]
+    'keywords': {
+        'halliday': 17420,
+        'halliday glasses': 12650,
+        'movie recommendation app': 620,
+        'halliday smart glasses': 2500,
+        'haliday': 2610
+    },
+    'top_countries': {
+        'United States': 20.7,
+        'United Kingdom': 5.83,
+        'Germany': 5.83,
+        'France': 5.40,
+        'Singapore': 4.61
+    },
+    'traffic_sources': {
+        'Direct': 31.88,
+        'Organic Search': 43.09,
+        'Referral': 11.07,
+        'Social': 11.72,
+        'Paid Search': 0.05
+    },
+    'social_media_sources': {
+        'Youtube': 82.55,
+        'Facebook': 12.55,
+        'X': 4.90
+    }
 }
 
-os.makedirs('asset/traffic', exist_ok=True)
-plt.rcParams.update({'font.size': 20, 'font.family': 'sans-serif'})
+plt.rcParams['font.size'] = 20
 
-# 1. MAU趋势折线图
-if "mau_trend" in traffic and traffic["mau_trend"]["dates"]:
-    plt.figure(figsize=(12,8))
-    plt.plot(traffic["mau_trend"]["dates"], traffic["mau_trend"]["maus"], marker='o', color='#5470c6')
-    plt.title('MAU Trend (Past 6-12 Months)', fontsize=20)
-    plt.xlabel('Month', fontsize=20)
-    plt.ylabel('MAU', fontsize=20)
-    plt.grid(True, linestyle='--', alpha=0.5)
+# MAU趋势（柱状图）
+if 'mau_trend' in traffic and traffic['mau_trend']:
+    months = list(traffic['mau_trend'].keys())
+    mau_values = list(traffic['mau_trend'].values())
+    plt.figure(figsize=(10,6))
+    bars = plt.bar(months, mau_values, color='#6B8BA4')
+    plt.xlabel('Month')
+    plt.ylabel('MAU')
+    plt.title('MAU Trend')
     plt.tight_layout()
-    plt.savefig('asset/traffic/mau_trend.png')
+    plt.savefig(os.path.join(save_dir, 'mau_trend.png'))
     plt.close()
 
-# 2. 关键词柱状图
-if "keywords" in traffic and traffic["keywords"]:
-    keywords = [kw["keyword"] for kw in traffic["keywords"]]
-    volumes = [kw["volume"] for kw in traffic["keywords"]]
-    plt.figure(figsize=(12,8))
-    bars = plt.barh(keywords, volumes, color='#91cc75')
-    plt.title('Top Keywords by Monthly Volume', fontsize=20)
-    plt.xlabel('Monthly Search Volume', fontsize=20)
-    plt.ylabel('Keyword', fontsize=20)
-    for i, v in enumerate(volumes):
-        plt.text(v + max(volumes)*0.01, i, str(v), va='center', fontsize=20)
+# 关键词（柱状图）
+if 'keywords' in traffic and traffic['keywords']:
+    keyword_names = list(traffic['keywords'].keys())
+    keyword_search = list(traffic['keywords'].values())
+    plt.figure(figsize=(12,6))
+    bars = plt.bar(keyword_names, keyword_search, color='#A5B2C2')
+    plt.xlabel('Keyword')
+    plt.ylabel('Monthly Search Vol.')
+    plt.title('Top Keywords')
     plt.tight_layout()
-    plt.savefig('asset/traffic/keywords.png')
+    plt.savefig(os.path.join(save_dir, 'keywords.png'))
     plt.close()
 
-# 3. 主要访问国家饼图
-if "countries" in traffic and traffic["countries"]:
-    countries = [c["country"] for c in traffic["countries"]]
-    percents = [c["percent"] for c in traffic["countries"]]
-    plt.figure(figsize=(10,10))
-    patches, texts, autotexts = plt.pie(percents, labels=countries, autopct='%1.1f%%',
-                                        colors=['#73c0de', '#fac858', '#ee6666', '#3ba272', '#fc8452'],
-                                        startangle=140, textprops={'fontsize': 20})
-    plt.title('Visitor Countries Distribution', fontsize=20)
+# 主要访问国家（饼图）
+if 'top_countries' in traffic and traffic['top_countries']:
+    country_names = list(traffic['top_countries'].keys())
+    country_percents = list(traffic['top_countries'].values())
+    plt.figure(figsize=(8,8))
+    plt.pie(
+        country_percents, 
+        labels=country_names, 
+        autopct='%1.1f%%', 
+        startangle=140,
+        colors=['#84A5C0','#C7D3D9','#A3B9C6','#B7C7DB','#94ADC1']
+    )
+    plt.title('Top Countries')
     plt.tight_layout()
-    plt.savefig('asset/traffic/countries.png')
+    plt.savefig(os.path.join(save_dir, 'top_countries.png'))
     plt.close()
 
-# 4. 流量来源饼图
-if "sources" in traffic and traffic["sources"]:
-    sources = [s["source"] for s in traffic["sources"]]
-    perc_sou = [s["percent"] for s in traffic["sources"]]
-    plt.figure(figsize=(10,10))
-    patches, texts, autotexts = plt.pie(perc_sou, labels=sources, autopct='%1.1f%%',
-                                        colors=['#91cc75', '#5470c6', '#73c0de', '#fac858', '#fc8452', '#ee6666'],
-                                        startangle=120, textprops={'fontsize': 20})
-    plt.title('Traffic Sources', fontsize=20)
+# 流量来源（饼图）
+if 'traffic_sources' in traffic and traffic['traffic_sources']:
+    source_names = list(traffic['traffic_sources'].keys())
+    source_percents = list(traffic['traffic_sources'].values())
+    plt.figure(figsize=(8,8))
+    plt.pie(
+        source_percents, 
+        labels=source_names,
+        autopct='%1.1f%%', 
+        startangle=140,
+        colors=['#7B93A8','#BAC8D3','#CDD7E1','#A7B9C8','#DEE3E7']
+    )
+    plt.title('Traffic Sources')
     plt.tight_layout()
-    plt.savefig('asset/traffic/traffic_sources.png')
+    plt.savefig(os.path.join(save_dir, 'traffic_sources.png'))
     plt.close()
 
-# 5. 社交媒体来源柱状图
-if "social_media" in traffic and traffic["social_media"]:
-    platforms = [s["platform"] for s in traffic["social_media"]]
-    percents_social = [s["percent"] for s in traffic["social_media"]]
-    plt.figure(figsize=(12,8))
-    bars = plt.bar(platforms, percents_social, color='#fac858')
-    plt.title('Social Media Traffic Sources', fontsize=20)
-    plt.xlabel('Platform', fontsize=20)
-    plt.ylabel('Percent (%)', fontsize=20)
-    for i, v in enumerate(percents_social):
-        plt.text(i, v + 1, f'{v:.1f}%', ha='center', fontsize=20)
+# 社交媒体来源（柱状图）
+if 'social_media_sources' in traffic and traffic['social_media_sources']:
+    social_names = list(traffic['social_media_sources'].keys())
+    social_percents = list(traffic['social_media_sources'].values())
+    plt.figure(figsize=(8,6))
+    bars = plt.bar(social_names, social_percents, color='#AFC3D3')
+    plt.xlabel('Social Media')
+    plt.ylabel('Percent')
+    plt.title('Social Media Sources')
     plt.tight_layout()
-    plt.savefig('asset/traffic/social_media_sources.png')
+    plt.savefig(os.path.join(save_dir, 'social_media_sources.png'))
     plt.close()
