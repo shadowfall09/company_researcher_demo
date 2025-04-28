@@ -2,113 +2,127 @@ import os
 import matplotlib.pyplot as plt
 
 # 确保保存目录存在
-save_dir = 'asset/traffic'
-os.makedirs(save_dir, exist_ok=True)
-
-# 示例流量数据（请将此处替换为实际traffic数据结构）
-traffic = {
-    'mau_trend': {
-        '2023-11': 14000, '2023-12': 16000, '2024-01': 18000, '2024-02': 20000, '2024-03': 22500, '2024-04': 24946
-    },
-    'keywords': {
-        'halliday': 17420,
-        'halliday glasses': 12650,
-        'movie recommendation app': 620,
-        'halliday smart glasses': 2500,
-        'haliday': 2610
-    },
-    'top_countries': {
-        'United States': 20.7,
-        'United Kingdom': 5.83,
-        'Germany': 5.83,
-        'France': 5.40,
-        'Singapore': 4.61
-    },
-    'traffic_sources': {
-        'Direct': 31.88,
-        'Organic Search': 43.09,
-        'Referral': 11.07,
-        'Social': 11.72,
-        'Paid Search': 0.05
-    },
-    'social_media_sources': {
-        'Youtube': 82.55,
-        'Facebook': 12.55,
-        'X': 4.90
-    }
-}
+output_dir = 'company_report/blackbird/asset/traffic'
+os.makedirs(output_dir, exist_ok=True)
 
 plt.rcParams['font.size'] = 20
 
-# MAU趋势（柱状图）
-if 'mau_trend' in traffic and traffic['mau_trend']:
-    months = list(traffic['mau_trend'].keys())
-    mau_values = list(traffic['mau_trend'].values())
-    plt.figure(figsize=(10,6))
-    bars = plt.bar(months, mau_values, color='#6B8BA4')
-    plt.xlabel('Month')
-    plt.ylabel('MAU')
-    plt.title('MAU Trend')
-    plt.tight_layout()
-    plt.savefig(os.path.join(save_dir, 'mau_trend.png'))
-    plt.close()
+# 数据定义
+# 1. MAU
+mau = 30000  # 约3万
 
-# 关键词（柱状图）
-if 'keywords' in traffic and traffic['keywords']:
-    keyword_names = list(traffic['keywords'].keys())
-    keyword_search = list(traffic['keywords'].values())
-    plt.figure(figsize=(12,6))
-    bars = plt.bar(keyword_names, keyword_search, color='#A5B2C2')
-    plt.xlabel('Keyword')
-    plt.ylabel('Monthly Search Vol.')
-    plt.title('Top Keywords')
-    plt.tight_layout()
-    plt.savefig(os.path.join(save_dir, 'keywords.png'))
-    plt.close()
+# 2. 关键词及搜索量
+keyword_data = [
+    {'Keyword': 'blackbird labs', 'Search Volume': 1390},
+    {'Keyword': 'blackbird', 'Search Volume': 303910},
+    {'Keyword': 'xyz', 'Search Volume': 141580},
+    {'Keyword': 'blackbird crypto', 'Search Volume': 450},
+    {'Keyword': 'blackbird loyalty', 'Search Volume': 260},
+]
+keywords = [item['Keyword'] for item in keyword_data]
+keyword_volume = [item['Search Volume'] for item in keyword_data]
 
-# 主要访问国家（饼图）
-if 'top_countries' in traffic and traffic['top_countries']:
-    country_names = list(traffic['top_countries'].keys())
-    country_percents = list(traffic['top_countries'].values())
-    plt.figure(figsize=(8,8))
-    plt.pie(
-        country_percents, 
-        labels=country_names, 
-        autopct='%1.1f%%', 
-        startangle=140,
-        colors=['#84A5C0','#C7D3D9','#A3B9C6','#B7C7DB','#94ADC1']
-    )
-    plt.title('Top Countries')
-    plt.tight_layout()
-    plt.savefig(os.path.join(save_dir, 'top_countries.png'))
-    plt.close()
+# 3. 主要访问国家
+country_labels = ['USA', 'Indonesia', 'UK', 'India', 'Canada']
+country_percents = [53.53, 6.99, 6.89, 5.63, 5.39]
 
-# 流量来源（饼图）
-if 'traffic_sources' in traffic and traffic['traffic_sources']:
-    source_names = list(traffic['traffic_sources'].keys())
-    source_percents = list(traffic['traffic_sources'].values())
-    plt.figure(figsize=(8,8))
-    plt.pie(
-        source_percents, 
-        labels=source_names,
-        autopct='%1.1f%%', 
-        startangle=140,
-        colors=['#7B93A8','#BAC8D3','#CDD7E1','#A7B9C8','#DEE3E7']
-    )
-    plt.title('Traffic Sources')
-    plt.tight_layout()
-    plt.savefig(os.path.join(save_dir, 'traffic_sources.png'))
-    plt.close()
+# 4. 流量来源
+source_labels = ['Direct', 'Organic Search', 'Referral', 'Social', 'Mail', 'Display Ads']
+source_percents = [49.56, 35.05, 10.81, 3.53, 0.15, 0.83]
 
-# 社交媒体来源（柱状图）
-if 'social_media_sources' in traffic and traffic['social_media_sources']:
-    social_names = list(traffic['social_media_sources'].keys())
-    social_percents = list(traffic['social_media_sources'].values())
-    plt.figure(figsize=(8,6))
-    bars = plt.bar(social_names, social_percents, color='#AFC3D3')
-    plt.xlabel('Social Media')
-    plt.ylabel('Percent')
-    plt.title('Social Media Sources')
-    plt.tight_layout()
-    plt.savefig(os.path.join(save_dir, 'social_media_sources.png'))
-    plt.close()
+# 5. 社交媒体来源
+social_labels = ['X(Twitter)', 'LinkedIn']
+social_percents = [98.43, 1.57]
+
+# 6. 竞争对手流量
+competitor_labels = [
+    'notboring.co',
+    'warpcast.com',
+    'dosh.com',
+    'blockworks.co',
+    'creditdonkey.com',
+    'chase.com',
+    'superrare.com'
+]
+competitor_traffic = [129766, 113320, 103627, 101244, 90568, 195273000, 153000]
+
+# 7. 年龄段分布
+age_labels = ['18-24', '25-34', '35-44', '45-54', '55-64', '65+']
+age_percents = [8.85, 34.35, 14.3, 18.3, 15.1, 9.1]
+
+#------------------#
+# 关键词 柱状图
+plt.figure(figsize=(12,8))
+plt.bar(keywords, keyword_volume, color='#6c8da2')
+plt.xlabel('Keyword', fontsize=20)
+plt.ylabel('Search Volume', fontsize=20)
+plt.title('Top 5 Keywords Search Volume', fontsize=20)
+plt.xticks(rotation=20)
+plt.tight_layout()
+plt.savefig(os.path.join(output_dir, 'keywords_bar.png'), dpi=180)
+plt.close()
+
+# 主要访问国家 饼图
+explode_countries = [0.07 if val == max(country_percents) else 0 for val in country_percents]
+def autopct_countries(pct):
+    return ('%1.1f%%' % pct) if pct >= 5 else ''
+plt.figure(figsize=(8,8))
+plt.pie(country_percents, labels=country_labels, autopct=autopct_countries,
+        explode=explode_countries, startangle=120,
+        colors=['#a7b6c2', '#bed3dd', '#e3e7eb', '#9da9b2', '#c8d3dc'])
+plt.title('Top Visitor Countries', fontsize=20)
+plt.tight_layout()
+plt.savefig(os.path.join(output_dir, 'countries_pie.png'), dpi=180)
+plt.close()
+
+# 流量来源 饼图
+explode_sources = [0.07 if val == max(source_percents) else 0 for val in source_percents]
+def autopct_sources(pct):
+    return ('%1.1f%%' % pct) if pct >= 5 else ''
+plt.figure(figsize=(8,8))
+plt.pie(source_percents, labels=source_labels, autopct=autopct_sources,
+        explode=explode_sources, startangle=120,
+        colors=['#b9b2a3', '#bfbbc9', '#e7e2db', '#dfdad7', '#dadbdc', '#bfc5ce'])
+plt.title('Traffic Sources', fontsize=20)
+plt.tight_layout()
+plt.savefig(os.path.join(output_dir, 'sources_pie.png'), dpi=180)
+plt.close()
+
+# 社交媒体来源 饼图
+explode_social = [0.07 if val == max(social_percents) else 0 for val in social_percents]
+def autopct_social(pct):
+    return ('%1.1f%%' % pct) if pct >= 5 else ''
+plt.figure(figsize=(8,8))
+plt.pie(social_percents, labels=social_labels, autopct=autopct_social,
+        explode=explode_social, startangle=120,
+        colors=['#cadcf3', '#b7bbc8'])
+plt.title('Social Media Sources', fontsize=20)
+plt.tight_layout()
+plt.savefig(os.path.join(output_dir, 'social_pie.png'), dpi=180)
+plt.close()
+
+# 竞争对手流量 柱状图 (按流量大小排序，不显示极端巨大的chase.com影响观感)
+top_comp_labels = ['notboring.co', 'warpcast.com', 'dosh.com', 'blockworks.co', 'creditdonkey.com', 'superrare.com']
+top_comp_traffic = [129766, 113320, 103627, 101244, 90568, 153000]
+plt.figure(figsize=(12,8))
+plt.bar(top_comp_labels, top_comp_traffic, color='#9ebcbc')
+plt.xlabel('Competitor', fontsize=20)
+plt.ylabel('Traffic', fontsize=20)
+plt.title('Competitor Traffic (Excluding Chase.com)', fontsize=20)
+plt.xticks(rotation=15)
+plt.tight_layout()
+plt.savefig(os.path.join(output_dir, 'competitor_bar.png'), dpi=180)
+plt.close()
+
+# 年龄段分布 饼图
+explode_age = [0.07 if val == max(age_percents) else 0 for val in age_percents]
+def autopct_age(pct):
+    return ('%1.1f%%' % pct) if pct >= 5 else ''
+plt.figure(figsize=(8,8))
+plt.pie(age_percents, labels=age_labels, autopct=autopct_age,
+        explode=explode_age, startangle=120,
+        colors=['#90bfc3','#bfbfc5','#e3e1e8','#e8cbba','#cabfad','#a0abb7'])
+plt.title('Visitor Age Distribution', fontsize=20)
+plt.tight_layout()
+plt.savefig(os.path.join(output_dir, 'age_pie.png'), dpi=180)
+plt.close()
