@@ -1,74 +1,68 @@
 import os
 import matplotlib.pyplot as plt
 
-# 创建保存图片的目录
-save_dir = 'company_report/Meanwhile/asset/traffic'
-os.makedirs(save_dir, exist_ok=True)
+# 创建目录
+output_dir = 'company_report/Meanwhile/asset/traffic'
+os.makedirs(output_dir, exist_ok=True)
 
-plt.rcParams['font.size'] = 20
+plt.rcParams.update({'font.size': 20})
 
-# 1. MAU（仅柱状图，若数据可视）
-maus = [5140, 1078, 913]
+# 1. MAU数据（柱状图）
 months = ['2025-01', '2025-02', '2025-03']
-
+maus = [7709, 1617, 1369]
 plt.figure(figsize=(10, 6))
-bars = plt.bar(months, maus, color='#6897bb', width=0.5)
-plt.title('Monthly Active Users (MAU)')
+bars = plt.bar(months, maus, color='#6B8EAB')
 plt.ylabel('MAU')
-plt.tight_layout()
-plt.savefig(os.path.join(save_dir, 'mau_bar.png'))
+plt.xlabel('Month')
+plt.title('Monthly Active Users (MAU)')
+plt.savefig(os.path.join(output_dir, 'mau_bar.png'), bbox_inches='tight')
 plt.close()
 
-# 2. 主要访问国家（假设只有美国有数据）
-countries = ['United States', 'Others']
-country_share = [99.9999, 0.0001]
-
-def autopct_func(pct):
-    return ('%.1f%%' % pct) if pct >= 5 else ''
-
-colors = ['#b7c5d9', '#d2d7df']
+# 2. 主要访问国家（饼图）
+country_labels = ['United States']
+country_sizes = [100]
 plt.figure(figsize=(8, 8))
 patches, texts, autotexts = plt.pie(
-    country_share, labels=countries, colors=colors,
-    autopct=autopct_func, startangle=90
+    country_sizes, 
+    labels=country_labels,
+    autopct=lambda p: '{:.0f}%'.format(p) if p >= 5 else '',
+    colors=['#9FB7B9']
 )
-for autotext in autotexts:
-    autotext.set_fontsize(20)
-plt.title('Traffic by Country')
-plt.tight_layout()
-plt.savefig(os.path.join(save_dir, 'traffic_country_pie.png'))
+for text in texts + autotexts:
+    text.set_fontsize(20)
+plt.title('Top Countries')
+plt.savefig(os.path.join(output_dir, 'country_pie.png'), bbox_inches='tight')
 plt.close()
 
-# 3. 流量来源
-sources = ['Direct', 'Organic Search', 'Social', 'Referral', 'Ads', 'Mail']
-source_share = [46.29, 27.02, 20.04, 5.72, 0.88, 0.038]
-colors = ['#95afba', '#d6cec3', '#a2aab3', '#c8c6a7', '#b7babf', '#e1e5ea']
-
-plt.figure(figsize=(10, 8))
+# 3. 流量来源（饼图）
+source_labels = [
+    'Direct', 'Organic Search', 'Social',
+    'Referral', 'Mail', 'Ads'
+]
+source_sizes = [
+    46.29, 27.02, 20.04, 5.72, 0.04, 0.88
+]
+source_colors = ['#59778e', '#b1b9c6', '#8bb3af', '#baa29a', '#cce0df', '#e7c9a9']
+plt.figure(figsize=(10, 10))
 patches, texts, autotexts = plt.pie(
-    source_share, labels=sources, colors=colors,
-    autopct=autopct_func, startangle=90
+    source_sizes,
+    labels=source_labels,
+    autopct=lambda p: '{:.2f}%'.format(p) if p >= 5 else '',
+    colors=source_colors
 )
-for autotext in autotexts:
-    autotext.set_fontsize(20)
+for text in texts + autotexts:
+    text.set_fontsize(20)
 plt.title('Traffic Sources')
-plt.tight_layout()
-plt.savefig(os.path.join(save_dir, 'traffic_source_pie.png'))
+plt.savefig(os.path.join(output_dir, 'source_pie.png'), bbox_inches='tight')
 plt.close()
 
-# 4. 社交媒体来源（暂无详细数据，故略）
-
-# 5. 主要竞争对手对比（柱状图：Meanwhile/Evertas）
-sites = ['Meanwhile', 'Evertas']
-traffic = [1369, 3135]
-bar_colors = ['#718ca1', '#b0b7c8']
-
-plt.figure(figsize=(8,6))
-bars = plt.bar(sites, traffic, color=bar_colors, width=0.5)
-plt.title('Competitor Total Visits (Mar 2025)')
-plt.ylabel('Total Visits')
-plt.tight_layout()
-plt.savefig(os.path.join(save_dir, 'competitor_bar.png'))
+# 4. 竞争对手对比柱状图
+competitor_labels = ['Meanwhile', 'evertas.com']
+competitor_traffic = [1369, 3135]
+plt.figure(figsize=(8, 6))
+bars = plt.bar(competitor_labels, competitor_traffic, color=['#8bb3af', '#59778e'])
+plt.ylabel('Estimated Traffic')
+plt.xlabel('Website')
+plt.title('Competitor Estimated Traffic (March 2025)')
+plt.savefig(os.path.join(output_dir, 'competitor_bar.png'), bbox_inches='tight')
 plt.close()
-
-# 6. 年龄段（暂无数据，略）

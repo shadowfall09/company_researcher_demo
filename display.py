@@ -15,6 +15,7 @@ if 'view_company' not in st.session_state:
 if 'selected_report' not in st.session_state:
     st.session_state.selected_report = None
 
+
 def 公司介绍():
     st.session_state.view_company = True
     # st.markdown("# 公司介绍")
@@ -100,56 +101,63 @@ def 提交报告生成任务():
             else:
                 st.error("请填写完整的公司名称和URL")
 
-# 根据会话状态显示页面
-if not st.session_state.view_company:
-    提交报告生成任务()
-    st.warning("目前生成报告还不可用，请点击左侧目录进入", icon="⚠️")
-else:
-    with open(base_dir+"/"+st.session_state.selected_report+"/report.txt", "r", encoding="utf-8") as f:
-        report = f.read().split("<<<>>><<<<>>><<<>>>换行标记<<<>>><<<<>>><<<>>>")
-    traffic_folder = base_dir+"/"+st.session_state.selected_report+"/asset/traffic"
-    competitor_folder = base_dir+"/"+st.session_state.selected_report+"/asset/competitor"
-    pg = st.navigation({report[0]:[公司介绍,Linkedin账号,社交媒体,网络流量,近期新闻,财务情况,市场情况,招聘情况]})
-    pg.run()
-    st.markdown(
-        """
-        <style>
-        /* 隐藏中间的标记和样式注入 */
-        .element-container:has(style){
-            display: none;
-        }
-        #floating-btn-anchor {
-            display: none;
-        }
-        .element-container:has(#floating-btn-anchor) {
-            display: none;
-        }
-
-        /* 修改紧跟在标记之后的 button 样式 */
-        .element-container:has(#floating-btn-anchor) + div button {
-            position: fixed;
-            bottom: 50px;
-            right: 50px;
-            z-index: 9999;
-            background-color: rgb(221, 41, 96);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            padding: 12px 25px;
-            font-size: 16px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-    
-    st.markdown('<span id="floating-btn-anchor"></span>', unsafe_allow_html=True)
-    back_btn = st.button("返回报告列表")
-    if back_btn:
-        if "view_company" in st.session_state:
-            st.session_state["view_company"] = False
-        pg = st.navigation([提交报告生成任务])
+def main():
+    # 根据会话状态显示页面
+    if not st.session_state.view_company:
+        提交报告生成任务()
+        st.warning("目前生成报告还不可用，请点击左侧目录进入", icon="⚠️")
+    else:
+        with open(base_dir+"/"+st.session_state.selected_report+"/report.txt", "r", encoding="utf-8") as f:
+            global report
+            report = f.read().split("<<<>>><<<<>>><<<>>>换行标记<<<>>><<<<>>><<<>>>")
+        global traffic_folder
+        global competitor_folder
+        traffic_folder = base_dir+"/"+st.session_state.selected_report+"/asset/traffic"
+        competitor_folder = base_dir+"/"+st.session_state.selected_report+"/asset/competitor"
+        pg = st.navigation({report[0]:[公司介绍,Linkedin账号,社交媒体,网络流量,近期新闻,财务情况,市场情况,招聘情况]})
         pg.run()
-        st.rerun()
+        st.markdown(
+            """
+            <style>
+            /* 隐藏中间的标记和样式注入 */
+            .element-container:has(style){
+                display: none;
+            }
+            #floating-btn-anchor {
+                display: none;
+            }
+            .element-container:has(#floating-btn-anchor) {
+                display: none;
+            }
+
+            /* 修改紧跟在标记之后的 button 样式 */
+            .element-container:has(#floating-btn-anchor) + div button {
+                position: fixed;
+                bottom: 50px;
+                right: 50px;
+                z-index: 9999;
+                background-color: rgb(221, 41, 96);
+                color: white;
+                border: none;
+                border-radius: 50px;
+                padding: 12px 25px;
+                font-size: 16px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
+        
+        st.markdown('<span id="floating-btn-anchor"></span>', unsafe_allow_html=True)
+        back_btn = st.button("返回报告列表")
+        if back_btn:
+            if "view_company" in st.session_state:
+                st.session_state["view_company"] = False
+            pg = st.navigation([提交报告生成任务])
+            pg.run()
+            st.rerun()
     
+    
+if __name__ == "__main__":
+    main()
