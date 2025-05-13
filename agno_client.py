@@ -73,8 +73,8 @@ def main(company_name: str, company_url: str):
     info_json = {"company_name": company_name, "company_url": company_url}
     
     # 截图
-    if not DEBUG:
-        screenshot(base_dir, company_url)
+    # if not DEBUG:
+    #     screenshot(base_dir, company_url)
     
     # 任务定义
     target_company = target_company_task(company_url, [GaorongvcMCP])

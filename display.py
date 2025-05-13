@@ -102,7 +102,7 @@ def 提交报告生成任务():
                                 env = os.environ.copy() 
                                 env.update(st.secrets)
                                 process = subprocess.Popen(
-                                    ["python", "agno_client.py", company_name, company_url],
+                                    ["/home/adminuser/venv/bin/python", "agno_client.py", company_name, company_url],
                                     stdout=subprocess.PIPE,
                                     stderr=subprocess.STDOUT,
                                     text=True,
