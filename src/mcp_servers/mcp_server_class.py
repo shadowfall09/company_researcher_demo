@@ -10,7 +10,7 @@ class GaorongvcMCP:
     command = "uv"
     # args = ["--from", "git+ssh://git@github.com/gaorongvc/mcp_servers"]
     # args = ["--from", "/Users/zhangbin/workspace/grrepos/mcp_servers"]
-    args = ["--directory", "/Users/user/Downloads/临时代码/mcp_servers/src/mcp_servers", "run", "server.py"]
+    args = ["--directory", "src/mcp_servers", "run", "server.py"]
 
 # https://docs.exa.ai/examples/exa-mcp#exa-mcp
 class EXA:

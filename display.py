@@ -102,7 +102,7 @@ def 提交报告生成任务():
                                 env = os.environ.copy() 
                                 env.update(st.secrets)
                                 process = subprocess.Popen(
-                                    ["/home/adminuser/venv/bin/python", "agno_client.py", company_name, company_url],
+                                    ["python", "agno_client.py", company_name, company_url],
                                     stdout=subprocess.PIPE,
                                     stderr=subprocess.STDOUT,
                                     text=True,
@@ -110,8 +110,14 @@ def 提交报告生成任务():
                                     universal_newlines=True,
                                     env=env
                                 )
+                                def stream_and_print_output(stream):
+                                    for line in iter(stream.readline, ''):
+                                        print(line, end='')  # 输出到命令行
+                                        yield line  # 输出到 Streamlit
+                                    stream.close()
+
                                 with st.expander("后台日志"):
-                                    st.write_stream(process.stdout)
+                                    st.write_stream(stream_and_print_output(process.stdout))
                                 process.wait()
                                 if process.returncode != 0:
                                     st.error(f"命令执行失败，返回码: {process.returncode}")
