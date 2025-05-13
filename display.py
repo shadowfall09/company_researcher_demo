@@ -1,8 +1,11 @@
 import streamlit as st
 import pandas as pd
+import subprocess
+import time
 import os
 
 base_dir = "company_report"
+LOCK_FILE = "report_generation.lock"
 
 report = None
 traffic_folder = None
@@ -18,25 +21,23 @@ if 'selected_report' not in st.session_state:
 
 def 公司介绍():
     st.session_state.view_company = True
-    # st.markdown("# 公司介绍")
     st.image(base_dir+"/"+st.session_state.selected_report+"/asset/screenshot.png")
     st.markdown(report[1])
 
 def Linkedin账号():
     st.session_state.view_company = True
-    # st.markdown("# Linkedin账号")
+    st.text("本页内容采集于历史Linkedin账号信息，内容可能不准确。")
     st.markdown(report[2])
 
 def 社交媒体():
     st.session_state.view_company = True
-    # st.markdown("# 社交媒体情况")
     st.markdown(report[3])
 
 def 网络流量():
     st.session_state.view_company = True
-    # st.markdown("# 网站流量")
-    st.markdown("## 图表展示")
     png_files = [os.path.join(traffic_folder, file) for file in os.listdir(traffic_folder) if file.endswith(".png")]
+    if png_files:
+        st.markdown("## 图表展示")
     for i in range(0, len(png_files), 2):
         col1, col2 = st.columns(2)
         with col1:
@@ -49,18 +50,15 @@ def 网络流量():
 
 def 近期新闻():
     st.session_state.view_company = True
-    # st.markdown("# 近期新闻")
     st.markdown(report[5])
 
 def 财务情况():
     st.session_state.view_company = True
-    # st.markdown("# 财务情况")
     st.markdown(report[6])
 
 def 市场情况():
     st.session_state.view_company = True
     st.markdown("从similar web获取的竞对信息（依据网络流量归类）请参考\"网络流量\"页面。")
-    # st.markdown("# 市场情况")
     if os.path.exists(os.path.join(competitor_folder, "competitors.csv")):
         st.markdown("## 竞争对手汇总")
         st.dataframe(pd.read_csv(os.path.join(competitor_folder, "competitors.csv")))
@@ -68,7 +66,6 @@ def 市场情况():
 
 def 招聘情况():
     st.session_state.view_company = True
-    # st.markdown("# 招聘情况")
     st.markdown(report[8])
 
 # 表单函数
@@ -90,14 +87,47 @@ def 提交报告生成任务():
     with st.form("report_form"):
         company_name = st.text_input("公司名称")
         company_url = st.text_input("公司URL")
-        submitted = st.form_submit_button("提交",disabled=True)
+        # ,disabled=True
+        submitted = st.form_submit_button("提交")
         if submitted:
-            if company_name and company_url or True:
-                with st.spinner("正在生成报告，大约需要10分钟左右，请耐心等待", show_time=True):
-                    import time
-                    time.sleep(5)
-                st.session_state.view_company = True
-                st.rerun()
+            if company_name and company_url:
+                if os.path.exists(LOCK_FILE):
+                    st.error("目前别的用户正在生成报告，请稍后再试")
+                else:
+                    with open(LOCK_FILE, "w") as f:
+                        f.write("locked")
+                    try:
+                        with st.spinner("正在生成报告，大约需要10分钟左右，请耐心等待", show_time=True):
+                            try:
+                                env = os.environ.copy() 
+                                env.update(st.secrets)
+                                process = subprocess.Popen(
+                                    ["python", "agno_client.py", company_name, company_url],
+                                    stdout=subprocess.PIPE,
+                                    stderr=subprocess.STDOUT,
+                                    text=True,
+                                    bufsize=1,
+                                    universal_newlines=True,
+                                    env=env
+                                )
+                                with st.expander("后台日志"):
+                                    st.write_stream(process.stdout)
+                                process.wait()
+                                if process.returncode != 0:
+                                    st.error(f"命令执行失败，返回码: {process.returncode}")
+                                else:
+                                    st.success("报告生成成功！正在跳转...")
+                                    time.sleep(2)
+                                    st.session_state.view_company = True
+                                    st.session_state.selected_report = company_name
+                                    st.rerun()
+                            except Exception as e:
+                                st.error(f"执行命令时出错: {str(e)}")
+                    except Exception as e:
+                        st.error("报告生成失败，请稍后再试")
+                    finally:
+                        if os.path.exists(LOCK_FILE):
+                            os.remove(LOCK_FILE)
             else:
                 st.error("请填写完整的公司名称和URL")
 
@@ -105,7 +135,7 @@ def main():
     # 根据会话状态显示页面
     if not st.session_state.view_company:
         提交报告生成任务()
-        st.warning("目前生成报告还不可用，请点击左侧目录进入", icon="⚠️")
+        # st.warning("目前生成报告还不可用，请点击左侧目录进入", icon="⚠️")
     else:
         with open(base_dir+"/"+st.session_state.selected_report+"/report.txt", "r", encoding="utf-8") as f:
             global report
