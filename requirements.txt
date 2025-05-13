@@ -10,4 +10,4 @@ apify_client
 pytest-playwright
 streamlit
 agno
-dotenv
+python-dotenv
