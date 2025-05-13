@@ -1,10 +1,7 @@
 from apify_client import ApifyClient
 from curl_cffi import requests
-from dotenv import load_dotenv
 import os
 
-# 加载.env文件中的环境变量
-load_dotenv()
 
 def get_traffic_by_domain(domain: str) -> str:
     print(f"Fetching Similarweb data for domain: {domain}")

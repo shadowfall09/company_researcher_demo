@@ -1,7 +1,4 @@
 import os
-from dotenv import load_dotenv
-# 加载.env文件中的环境变量
-load_dotenv()
 
 EXA_API_KEY = os.getenv("EXA_API_KEY")
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
