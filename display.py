@@ -6,7 +6,7 @@ import os
 import sys 
 
 python_path = sys.executable
-print(f"当前运行的 Python 路径: {python_path}")
+st.write(f"当前运行的 Python 路径: {python_path}")
 from importlib.metadata import distributions
 packages = []
 for dist in distributions():
@@ -18,7 +18,7 @@ for dist in distributions():
 packages.sort(key=lambda x: x[0].lower())
 
 for name, version in packages:
-    print(f"{name}=={version}")
+    st.write(f"{name}=={version}")
 
 base_dir = "company_report"
 LOCK_FILE = "report_generation.lock"
