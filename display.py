@@ -3,6 +3,22 @@ import pandas as pd
 import subprocess
 import time
 import os
+import sys 
+
+python_path = sys.executable
+print(f"当前运行的 Python 路径: {python_path}")
+from importlib.metadata import distributions
+packages = []
+for dist in distributions():
+    name = dist.metadata['Name']
+    version = dist.version
+    if name:
+        packages.append((name, version))
+
+packages.sort(key=lambda x: x[0].lower())
+
+for name, version in packages:
+    print(f"{name}=={version}")
 
 base_dir = "company_report"
 LOCK_FILE = "report_generation.lock"
@@ -102,7 +118,8 @@ def 提交报告生成任务():
                                 env = os.environ.copy() 
                                 env.update(st.secrets)
                                 process = subprocess.Popen(
-                                    ["/home/adminuser/venv/bin/python", "agno_client.py", company_name, company_url],
+                                    # /home/adminuser/venv/bin/
+                                    ["python", "agno_client.py", company_name, company_url],
                                     stdout=subprocess.PIPE,
                                     stderr=subprocess.STDOUT,
                                     text=True,

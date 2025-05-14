@@ -1,0 +1,6 @@
+.venv
+venv
+logs/
+*.pyc
+.DS_Store
+company_report
